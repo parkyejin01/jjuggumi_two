@@ -158,13 +158,15 @@ void lie_stamin(void)
 		if (left_lie == 1 && use_lie_l == 0)
 		{
 			//다이얼로그 출력
-
+			char arrleft[] = "left";
+			dialog_juldarigi_lie(arrleft);
 			use_lie_l = 1;
 		}
 		if (right_lie == 1 && use_lie_r == 0)
 		{
 			//다이얼로그 출력
-
+			char arrright[] = "right";
+			dialog_juldarigi_lie(arrright);
 			use_lie_r = 1;
 		}
 	}

@@ -25,6 +25,7 @@ void map_init(int n_row, int n_col);
 void dialog(char message[]);
 void dialog_mgh(char message[]);
 void dialog_jul(char message[]);
+void dialog_juldarigi_lie(char message[]);
 bool placable(int row, int col);
 void display(void);
 void display_jul(void);

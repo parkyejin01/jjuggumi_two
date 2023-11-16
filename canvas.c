@@ -320,7 +320,7 @@ void dialog_jul(char message[])
 	}
 
 	for (int i = 0; i < 3; i++) {
-		back_buf[i][5] = back_buf[i][26] = '*';
+		back_buf[i][5] = back_buf[i][26+k] = '*';
 
 		for (int j = 6; j < 26 + k; j++) {
 			back_buf[i][j] = (i == 0 || i == 2) ? '*' : ' ';
@@ -359,7 +359,58 @@ void dialog_jul(char message[])
 	}
 
 	for (int i = 0; i < 3; i++) {
-		for (int j = 5; j < 27; j++) {
+		for (int j = 5; j < 27 + k; j++) {
+			gotoxy(i, j);
+			printf("%c", back_buf[i][j]);
+		}
+	}
+}
+
+void dialog_juldarigi_lie(char message[])
+{
+
+	for (int i = 0; i < ROW_MAX; i++) {
+		for (int j = 0; j < COL_MAX; j++) {
+			rmb_buf[i][j] = back_buf[i][j];
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 5; j < 32; j++) {
+			back_buf[i][j] = ' ';
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		back_buf[i][5] = back_buf[i][31] = '*';
+
+		for (int j = 6; j < 31; j++) {
+			back_buf[i][j] = (i == 0 || i == 2) ? '*' : ' ';
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 5; j < 32; j++) {
+			gotoxy(i, j);
+			printf("%c", back_buf[i][j]);
+		}
+	}
+
+
+	gotoxy(1, 8);
+	
+	printf("\'%s\' team is lying!", message);
+
+	Sleep(1000);
+
+	for (int i = 0; i < ROW_MAX; i++) {
+		for (int j = 0; j < COL_MAX; j++) {
+			back_buf[i][j] = rmb_buf[i][j];
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 5; j < 32; j++) {
 			gotoxy(i, j);
 			printf("%c", back_buf[i][j]);
 		}
