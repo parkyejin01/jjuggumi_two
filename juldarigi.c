@@ -353,16 +353,16 @@ void juldarigi(void)
 		//2초
 		if (tick == 2000)
 		{
+			left_lie = 0;
+			right_lie = 0;
+			left_flag = 0;
+			right_flag = 0;
+			use_lie_l = 0;
+			use_lie_r = 0;
 			//다이얼로그 출력
 			if (bye > 0)
 			{
 				dialog_jul(jul_fail_p);
-				left_lie = 0;
-				right_lie = 0;
-				left_flag = 0;
-				right_flag = 0;
-				use_lie_l = 0;
-				use_lie_r = 0;
 
 				//탈락자 정산
 				int left = 0;
