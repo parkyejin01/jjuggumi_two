@@ -13,6 +13,10 @@ int left_lie = 0;
 int left_flag = 0;
 int right_lie = 0;
 int right_flag = 0;
+int use_lie_l = 0;
+int use_lie_r = 0;
+
+
 int die;
 double str_list[PLAYER_MAX];//플레이어 별 유효 힘 배열
 int juldarigi_fail[PLAYER_MAX];//줄다리기 탈락 플레이어 확인 배열
@@ -131,7 +135,39 @@ void stamin(void)//게임 마칠 때마다 일정량 회복
 //눕기를 쓴 플레이어는 스테미나 -30 감소
 void lie_stamin(void)
 {
-	
+	if (left_lie == 1 || right_lie == 1)
+	{
+		for (int p = 0; p < n_player; p++)
+		{
+			if (juldarigi_fail[p] == 0)
+			{
+				if (left_lie == 1 && p % 2 == 0 && use_lie_l == 0)
+				{
+					player[p].stamina -= 30;
+				}
+				else if (right_lie == 1 && p % 2 == 1 && use_lie_r == 0)
+				{
+					player[p].stamina -= 30;
+				}
+				if (player[p].stamina < 0)
+				{
+					player[p].stamina = 0;
+				}
+			}
+		}
+		if (left_lie == 1 && use_lie_l == 0)
+		{
+			//다이얼로그 출력
+
+			use_lie_l = 1;
+		}
+		if (right_lie == 1 && use_lie_r == 0)
+		{
+			//다이얼로그 출력
+
+			use_lie_r = 1;
+		}
+	}
 }
 
 
@@ -169,6 +205,10 @@ void juldarigi(void)
 				default: break;
 				}
 			}
+
+			//눕기 사용시 다이얼로그, 스테미나 감소
+			lie_stamin();
+
 			double left_str = 0;
 			double right_str = 0;
 			for (int p = 0; p < n_player; p++)
@@ -319,6 +359,8 @@ void juldarigi(void)
 				right_lie = 0;
 				left_flag = 0;
 				right_flag = 0;
+				use_lie_l = 0;
+				use_lie_r = 0;
 
 				//탈락자 정산
 				int left = 0;
