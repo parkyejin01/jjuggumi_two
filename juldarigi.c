@@ -9,16 +9,19 @@
 
 int jul;//줄 가운데 정렬 기준 위치 변수
 double fight_str;
+int left_lie = 0;
+int left_flag = 0;
+int right_lie = 0;
+int right_flag = 0;
 int die;
-int lie_left = 0;
-int lie_right = 0;
 double str_list[PLAYER_MAX];//플레이어 별 유효 힘 배열
 int juldarigi_fail[PLAYER_MAX];//줄다리기 탈락 플레이어 확인 배열
-char jul_fail_p[3] = { ' ', ', ', ' ' };//다이얼로그로 매 판 줄다리기 탈락 플레이어를 전달할 배열
+char jul_fail_p[3] = { ' ', ',', ' ' };//다이얼로그로 매 판 줄다리기 탈락 플레이어를 전달할 배열
 
 void juldarigi(void);
 void juldarigi_init(void);
 void stamin(void);
+void lie_stamin(void);
 
 void jul_move(int);
 void player_move(int);
@@ -125,6 +128,11 @@ void stamin(void)//게임 마칠 때마다 일정량 회복
 	}
 }
 
+//눕기를 쓴 플레이어는 스테미나 -30 감소
+void lie_stamin(void)
+{
+	
+}
 
 
 void juldarigi(void)
@@ -156,8 +164,8 @@ void juldarigi(void)
 				{
 				case 'z': plus_str--; break;
 				case '/': plus_str++; break;
-				case 'x': break;
-				case '.': break;
+				case 'x': left_lie = 1; break;
+				case '.': right_lie = 1; break;
 				default: break;
 				}
 			}
@@ -177,6 +185,17 @@ void juldarigi(void)
 					}
 				}
 			}
+
+			if (left_lie == 1)
+			{
+				left_str *= 2;
+			}
+			
+			if (right_lie == 1)
+			{
+				right_str *= 2;
+			}
+
 			fight_str = right_str - left_str + plus_str;//유효 힘의 합
 			gotoxy(N_ROW + 2, 0);
 			printf("str:\t%.1lf", fight_str);//유효 힘 합 표시
@@ -185,15 +204,23 @@ void juldarigi(void)
 		//1초
 		if (tick == 1000)
 		{
-			die = 0;//탈락 확인 변수
+			bye = 0;//탈락 확인 변수
 			//줄 가운데 위치 값 조정
 			if (fight_str < 0)
 			{
 				jul--;
+				if (left_lie == 1)
+				{
+					jul--;
+				}
 			}
 			else if (fight_str > 0)
 			{
 				jul++;
+				if (right_lie == 1)
+				{
+					jul++;
+				}
 			}
 
 			
@@ -203,12 +230,23 @@ void juldarigi(void)
 				if (fight_str < 0)//왼쪽 승리 시
 				{
 					jul++;
+					if (left_lie == 1 && jul < -1)//눕기 시 오른쪽팀 플레이어 탈락자가 두명일 때
+					{
+						jul++;
+						left_flag = 1;
+					}
 				}
 				else if (fight_str > 0)//오른쪽 승리 시
 				{
 					jul--;
+					if (right_lie == 1 && jul > 1)//눕기 시 왼쪽팀 플레이어 탈락자가 두명일 때
+					{
+						jul--;
+						right_flag = 1;
+					}
 				}
 
+				die = 0;
 				//플레이어 탈락
 				for (int p = 0; p < n_player; p++)
 				{
@@ -218,22 +256,32 @@ void juldarigi(void)
 						{
 							if (p % 2 == 1) //오른쪽 플레이어 탈락
 							{
-								die = 1;
+								bye ++;
 							}
 						}
 						else if (fight_str > 0)//오른쪽 승리 시
 						{
 							if (p % 2 == 0)//왼쪽 플레이어 탈락
 							{
-								die = 1;
+								bye ++;
 							}
 						}
 
-						if (die == 1)//탈락자발생은 한 턴에 1명만
+						if (bye == 1 && (left_flag == 0 && right_flag == 0))//탈락자발생은 한 턴에 1명만
 						{
 							juldarigi_fail[p] = 1;
-							jul_fail_p[die - 1] = '0' + p;
+							jul_fail_p[die] = '0' + p;
 							break;
+						}
+						else if (bye <= 2)
+						{
+							juldarigi_fail[p] = 1;
+							jul_fail_p[die] = '0' + p;
+							die += 2;
+							if (die == 4)
+							{
+								break;
+							}
 						}
 					}
 				}
@@ -264,9 +312,13 @@ void juldarigi(void)
 		if (tick == 2000)
 		{
 			//다이얼로그 출력
-			if (die > 0)
+			if (bye > 0)
 			{
 				dialog_jul(jul_fail_p);
+				left_lie = 0;
+				right_lie = 0;
+				left_flag = 0;
+				right_flag = 0;
 
 				//탈락자 정산
 				int left = 0;
