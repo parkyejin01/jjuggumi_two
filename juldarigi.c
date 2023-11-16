@@ -18,6 +18,7 @@ char jul_fail_p[3] = { ' ', ', ', ' ' };//다이얼로그로 매 판 줄다리기 탈락 플레�
 
 void juldarigi(void);
 void juldarigi_init(void);
+void stamin(void);
 
 void jul_move(int);
 void player_move(int);
@@ -109,6 +110,22 @@ void juldarigi_init(void)//시작 맵 만들기
 }
 
 
+void stamin(void)//게임 마칠 때마다 일정량 회복
+{
+	for (int p = 0; p < n_player; p++)
+	{
+		if (player[p].is_alive == true)
+		{
+			player[p].stamina += 40;
+			if (player[p].stamina > 100)
+			{
+				player[p].stamina = 100;
+			}
+		}
+	}
+}
+
+
 
 void juldarigi(void)
 {
@@ -124,6 +141,7 @@ void juldarigi(void)
 		key_t key = juldarigi_get_key();
 		if (key == K_QUIT)//Q입력 시 종료
 		{
+			stamin();
 			return;
 		}
 
@@ -328,6 +346,7 @@ void juldarigi(void)
 							}
 						}
 					}
+					stamin();
 					break;
 				}
 			}
