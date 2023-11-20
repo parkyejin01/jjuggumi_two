@@ -16,6 +16,7 @@ int right_flag = 0;
 int use_lie_l = 0;
 int use_lie_r = 0;
 
+ITEM none = { 0 };
 
 int die;
 double str_list[PLAYER_MAX];//플레이어 별 유효 힘 배열
@@ -87,12 +88,7 @@ void juldarigi_init(void)//시작 맵 만들기
 		{
 			died_player[p] = 1;
 			player[p].hasitem = false;
-			for (int i = 0; i < 100; i++)
-			{
-				player[p].item.name[i] = ' ';
-			}
-			player[p].item.intel_buf = player[p].item.str_buf = 0;//아이템 없애기
-			player[p].item.stamina_buf = 0;
+			player[p].item = none;//아이템 없애기
 			player[p].is_alive = true;
 		}
 		else
@@ -426,11 +422,7 @@ void juldarigi(void)
 							else
 							{
 								player[p].hasitem = false;
-								for (int i = 0; i < 100; i++)
-								{
-									player[p].item.name[i] = ' ';
-								}
-								player[p].item.intel_buf = player[p].item.str_buf = player[p].item.stamina_buf = 0;
+								player[p].item = none;//아이템 없애기
 								player[p].intel /= 2;
 								player[p].str /= 2;
 							}
@@ -444,11 +436,7 @@ void juldarigi(void)
 							else
 							{
 								player[p].hasitem = false;
-								for (int i = 0; i < 100; i++)
-								{
-									player[p].item.name[i] = ' ';
-								}
-								player[p].item.intel_buf = player[p].item.str_buf = player[p].item.stamina_buf = 0;
+								player[p].item = none;//아이템 없애기
 								player[p].intel /= 2;
 								player[p].str /= 2;
 							}
