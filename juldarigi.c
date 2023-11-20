@@ -196,9 +196,7 @@ void juldarigi(void)
 				//키 지정
 				switch (key)
 				{
-				case 'z': plus_str--; 
-					printf("debug: z눌림\n");
-					break;
+				case 'z': plus_str--; break;
 				case '/': plus_str++; break;
 				case 'x': left_lie = 1; break;
 				case '.': right_lie = 1; break;

@@ -132,6 +132,7 @@
     <ClCompile Include="juldarigi.c" />
     <ClCompile Include="keyin.c" />
     <ClCompile Include="mugunghwa.c" />
+    <ClCompile Include="nightgame.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="canvas.h" />
