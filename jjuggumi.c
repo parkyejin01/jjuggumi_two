@@ -169,9 +169,9 @@ int jjuggumi_init(void) {
 
 int main(void) {
 	jjuggumi_init();
-	intro();
+	//intro();
 	//sample();
-	mugunghwa();
+	//mugunghwa();
 	//nightgame();
 	juldarigi();
 	//jebi();

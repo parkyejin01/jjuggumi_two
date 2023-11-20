@@ -200,7 +200,9 @@ void juldarigi(void)
 				//키 지정
 				switch (key)
 				{
-				case 'z': plus_str--; break;
+				case 'z': plus_str--; 
+					printf("debug: z눌림\n");
+					break;
 				case '/': plus_str++; break;
 				case 'x': left_lie = 1; break;
 				case '.': right_lie = 1; break;
@@ -298,33 +300,50 @@ void juldarigi(void)
 						{
 							if (p % 2 == 1) //오른쪽 플레이어 탈락
 							{
-								bye ++;
+								bye++;
+								if ((left_flag == 0 && right_flag == 0))//탈락자발생은 한 턴에 1명만
+								{
+									juldarigi_fail[p] = 1;
+									jul_fail_p[die] = '0' + p;
+									break;
+								}
+								else
+								{
+									juldarigi_fail[p] = 1;
+									jul_fail_p[die] = '0' + p;
+									die += 2;
+									if (die == 4)
+									{
+										break;
+									}
+								}
 							}
 						}
 						else if (fight_str > 0)//오른쪽 승리 시
 						{
 							if (p % 2 == 0)//왼쪽 플레이어 탈락
 							{
-								bye ++;
+								bye++;
+								if ((left_flag == 0 && right_flag == 0))//탈락자발생은 한 턴에 1명만
+								{
+									juldarigi_fail[p] = 1;
+									jul_fail_p[die] = '0' + p;
+									break;
+								}
+								else
+								{
+									juldarigi_fail[p] = 1;
+									jul_fail_p[die] = '0' + p;
+									die += 2;
+									if (die == 4)
+									{
+										break;
+									}
+								}
 							}
 						}
 
-						if (bye == 1 && (left_flag == 0 && right_flag == 0))//탈락자발생은 한 턴에 1명만
-						{
-							juldarigi_fail[p] = 1;
-							jul_fail_p[die] = '0' + p;
-							break;
-						}
-						else if (bye <= 2)
-						{
-							juldarigi_fail[p] = 1;
-							jul_fail_p[die] = '0' + p;
-							die += 2;
-							if (die == 4)
-							{
-								break;
-							}
-						}
+						
 					}
 				}
 			}
