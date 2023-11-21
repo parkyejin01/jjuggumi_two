@@ -15,6 +15,8 @@ int itemx[ITEM_MAX], itemy[ITEM_MAX];
 void nightgame_init(void);
 void p0(key_t);
 void player_move_night(int, int, int);
+void the_rest_player(int);
+
 
 //야간운동 맵 생성
 void nightgame_init(void)
@@ -81,6 +83,11 @@ void p0(key_t key)
 	player_move_night(0, nx, ny);
 }
 
+void the_rest_player(int p)
+{
+
+}
+
 void player_move_night(int p, int nx, int ny)
 {
 	back_buf[nx][ny] = back_buf[px[p]][py[p]];
@@ -105,7 +112,7 @@ void nightgame(void)
 		}
 		else if (key != K_UNDEFINED)//방향키 입력 받았을 시 플레이어 0 코드
 		{
-			if (player[0].is_alive == true)
+			if (player[0].is_alive == true)//플레이어 0이 살아있을 때 실행
 			{
 				p0(key);
 			}
@@ -114,14 +121,17 @@ void nightgame(void)
 		//플레이어 0제외한 플레이어 코드
 		if (tick == 30)
 		{
-
+			for (int p = 1; p < n_player; p++)
+			{
+				if (player[p].is_alive == true)
+				{
+					the_rest_player(p);
+				}
+			}
 		}
 
 
-		for (int p = 0; p < n_player; p++)
-		{
-
-		}
+		
 		
 
 		display();
