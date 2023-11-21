@@ -37,7 +37,7 @@ int died_player[PLAYER_MAX];//줄다리기 때 죽은 플레이어 flag변수 배열
 //void sample(void);
 void mugunghwa(void);
 //void mugunghwa(void);
-//void nightgame(void);
+void nightgame(void);
 void juldarigi(void);
 //void jebi(void);
 
