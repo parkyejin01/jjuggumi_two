@@ -90,6 +90,7 @@ void juldarigi_init(void)//시작 맵 만들기
 			player[p].hasitem = false;
 			player[p].item = none;//아이템 없애기
 			player[p].is_alive = true;
+			n_alive++;
 		}
 		else
 		{
@@ -416,6 +417,7 @@ void juldarigi(void)
 							if (died_player[p] == 1)
 							{
 								player[p].is_alive = false;
+								n_alive--;
 							}
 							else
 							{
@@ -430,6 +432,7 @@ void juldarigi(void)
 							if (died_player[p] == 1)
 							{
 								player[p].is_alive = false;
+								n_alive--;
 							}
 							else
 							{
@@ -437,13 +440,6 @@ void juldarigi(void)
 								player[p].item = none;//아이템 없애기
 								player[p].intel /= 2;
 								player[p].str /= 2;
-							}
-						}
-						else
-						{
-							if (died_player[p] == 1)
-							{
-								n_alive++;
 							}
 						}
 					}

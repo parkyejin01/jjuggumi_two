@@ -97,22 +97,49 @@ void nightgame(void)
 
 	while (1)
 	{
+		//키 입력 받기
 		key_t key = get_key();
 		if (key == K_QUIT)//Q입력 시 종료
 		{
 			return;
 		}
-		else if (key != K_UNDEFINED)//방향키 입력 받았을 시
+		else if (key != K_UNDEFINED)//방향키 입력 받았을 시 플레이어 0 코드
 		{
-			p0(key);
+			if (player[0].is_alive == true)
+			{
+				p0(key);
+			}
+		}
+
+		//플레이어 0제외한 플레이어 코드
+		if (tick == 30)
+		{
+
 		}
 
 
+		for (int p = 0; p < n_player; p++)
+		{
+
+		}
 		
 
 		display();
 
 		tick += 10;
 		Sleep(10);
+
+
+		//여기에 인접한 칸에 아이템이 있을 때 상호작용 코드 만들기
+
+
+		//여기에 인접한 칸에 플레이어 있을 때 상호작용 코드 만들기
+
+
+
+		if (tick == 30)
+		{
+			tick = 0;
+		}
 	}
 }
