@@ -10,7 +10,9 @@
 
 
 int px[PLAYER_MAX] = { 0 }, py[PLAYER_MAX] = { 0 };
-int itemx[ITEM_MAX], itemy[ITEM_MAX];
+int period[PLAYER_MAX] = { 0 };
+int item_limit[ITEM_MAX];
+int itemx[ITEM_MAX] = { 0 }, itemy[ITEM_MAX] = { 0 };
 int nx, ny;
 
 
@@ -26,42 +28,65 @@ void shortmove(int, int, int);
 void nightgame_init(void)
 {
 	//맵 틀 만들기
-	map_init(11, 35);
+	map_init(10, 30);
 
 	//플레이어 위치 랜덤
 	for (int i = 0; i < n_player; i++)
 	{
 		if (player[i].is_alive == true)
 		{
-			px[i] = randint(1, 9);
-			py[i] = randint(1, 33);
+			px[i] = randint(1, 8);
+			py[i] = randint(1, 28);
 
 			//중복되지 않은 위치 설정
 			while (back_buf[px[i]][py[i]] != ' ')
 			{
-				px[i] = randint(1, 9);
-				py[i] = randint(1, 33);
+				px[i] = randint(1, 8);
+				py[i] = randint(1, 28);
 			}
 
 			back_buf[px[i]][py[i]] = '0' + i;//플레이어 시작 위치로 이동
+
+			period[i] = randint(100, 300);
 		}
 	}
 	
+	
+	int count_item = 0;
+	while (count_item != n_alive - 1)
+	{
+		count_item = 0;
+
+		for (int i = 0; i < n_item; i++)
+		{
+			item_limit[i] = randint(0, 1);
+			
+			if (item_limit[i] == 1)
+			{
+				count_item++;
+			}
+		}
+	}
+
+
 
 	
 	for (int i = 0; i < n_item; i++)
 	{
-		itemx[i] = randint(1, 9);
-		itemy[i] = randint(1, 33);
-		
-		//중복되지 않은 위치 설정
-		while (back_buf[itemx[i]][itemy[i]] != ' ')
+		if (item_limit[i] == 1)
 		{
-			itemx[i] = randint(1, 9);
-			itemy[i] = randint(1, 33);
-		}
+			itemx[i] = randint(1, 8);
+			itemy[i] = randint(1, 28);
 
-		back_buf[itemx[i]][itemy[i]] = 'I';
+			//중복되지 않은 위치 설정
+			while (back_buf[itemx[i]][itemy[i]] != ' ')
+			{
+				itemx[i] = randint(1, 8);
+				itemy[i] = randint(1, 28);
+			}
+
+			back_buf[itemx[i]][itemy[i]] = 'I';
+		}
 	}
 
 
@@ -327,26 +352,15 @@ void nightgame(void)
 			}
 		}
 
-		//플레이어 0제외한 플레이어 코드
-		if (tick == 1000)
-		{
-			for (int p = 1; p < n_player; p++)
-			{
-				if (player[p].is_alive == true)
-				{
-					the_rest_player(p);
-				}
-			}
-		}
-
-		
-		
-		//플레이어 소유한 아이템 플레이어와 함께 이동 처리
-		for (int p = 0; p < n_player; p++)
+		//플레이어 0제외한 플레이어 
+		for (int p = 1; p < n_player; p++)
 		{
 			if (player[p].is_alive == true)
 			{
-
+				if (tick % period[p] == 0)
+				{
+					the_rest_player(p);
+				}
 			}
 		}
 
@@ -367,9 +381,5 @@ void nightgame(void)
 
 
 
-		if (tick == 1010)
-		{
-			tick = 0;
-		}
 	}
 }
