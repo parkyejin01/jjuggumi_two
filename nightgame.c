@@ -11,10 +11,11 @@
 
 int px[PLAYER_MAX] = { 0 }, py[PLAYER_MAX] = { 0 };
 int period[PLAYER_MAX] = { 0 };
+int count_item;
 int item_limit[ITEM_MAX];
 int itemx[ITEM_MAX] = { 0 }, itemy[ITEM_MAX] = { 0 };
 int nx, ny;
-
+ITEM night_items[ITEM_MAX] = { 0 };
 
 void nightgame_init(void);
 void p0(key_t);
@@ -52,7 +53,7 @@ void nightgame_init(void)
 	}
 	
 	
-	int count_item = 0;
+	count_item = 0;
 	while (count_item != n_alive - 1)
 	{
 		count_item = 0;
@@ -68,25 +69,31 @@ void nightgame_init(void)
 		}
 	}
 
-
-
-	
+	int k = 0;
+	//야간운동 아이템 배열 옮기기
 	for (int i = 0; i < n_item; i++)
 	{
 		if (item_limit[i] == 1)
 		{
+			night_items[k] = item[i];
+			k++;
+		}
+	}
+
+	
+	for (int i = 0; i < count_item; i++)
+	{
+		itemx[i] = randint(1, 8);
+		itemy[i] = randint(1, 28);
+
+		//중복되지 않은 위치 설정
+		while (back_buf[itemx[i]][itemy[i]] != ' ')
+		{
 			itemx[i] = randint(1, 8);
 			itemy[i] = randint(1, 28);
-
-			//중복되지 않은 위치 설정
-			while (back_buf[itemx[i]][itemy[i]] != ' ')
-			{
-				itemx[i] = randint(1, 8);
-				itemy[i] = randint(1, 28);
-			}
-
-			back_buf[itemx[i]][itemy[i]] = 'I';
 		}
+
+		back_buf[itemx[i]][itemy[i]] = 'I';
 	}
 
 
@@ -122,7 +129,7 @@ void the_rest_player(int p)
 	double shortest1 = INT_MAX;
 	int index1;
 	//아이템들 중 가장 짧은 거리
-	for (int i = 0; i < n_item; i++)
+	for (int i = 0; i < count_item; i++)
 	{
 		if (back_buf[itemx[i]][itemy[i]] == 'I')
 		{
@@ -338,6 +345,62 @@ void nightgame(void)
 
 	while (1)
 	{
+		//여기에 인접한 칸에 아이템이 있을 때 상호작용 코드 만들기
+		for (int p = 0; p < n_player; p++)
+		{
+			//살아있는 플레이어 중 아이템이 인접한 공간에 있을 때
+			if ((player[p].is_alive == true))
+			{
+				if (back_buf[px[p] - 1][py[p]] == 'I' || back_buf[px[p] + 1][py[p]] == 'I' || back_buf[px[p]][py[p] - 1] == 'I' || back_buf[px[p]][py[p] + 1] == 'I')
+				{
+					if (player[p].hasitem == true)//플레이어가 아이템을 가지고 있을 경우
+					{
+
+					}
+					else//플레이어가 아이템을 가지고 있지 않은 경우
+					{
+						player[p].hasitem == true;//아이템 가지고 있다고 설정
+						for (int i = 0; i < count_item; i++)
+						{
+							if (back_buf[itemx[i]][itemy[i]] == 'I')
+							{
+								if ((itemx[i] == px[p] - 1) && (itemy[i] == py[p]))//위에 아이템
+								{
+									player[p].item = night_items[i];
+									back_buf[itemx[i]][itemy[i]] = ' ';
+									break;
+								}
+								else if ((itemx[i] == px[p] + 1) && (itemy[i] == py[p]))//아래에 아이템
+								{
+									player[p].item = night_items[i];
+									back_buf[itemx[i]][itemy[i]] = ' ';
+									break;
+								}
+								else if ((itemx[i] == px[p]) && (itemy[i] == py[p] - 1))//왼쪽에 아이템
+								{
+									player[p].item = night_items[i];
+									back_buf[itemx[i]][itemy[i]] = ' ';
+									break;
+								}
+								else if ((itemx[i] == px[p]) && (itemy[i] == py[p] + 1))//오른쪽에 아이템
+								{
+									player[p].item = night_items[i];
+									back_buf[itemx[i]][itemy[i]] = ' ';
+									break;
+								}
+							}
+						}
+
+					}
+				}
+
+			}
+		}
+
+		//여기에 인접한 칸에 플레이어 있을 때 상호작용 코드 만들기
+		
+		
+		
 		//키 입력 받기
 		key_t key = get_key();
 		if (key == K_QUIT)//Q입력 시 종료
@@ -374,10 +437,7 @@ void nightgame(void)
 		Sleep(10);
 
 
-		//여기에 인접한 칸에 아이템이 있을 때 상호작용 코드 만들기
-
-
-		//여기에 인접한 칸에 플레이어 있을 때 상호작용 코드 만들기
+		
 
 
 

@@ -187,8 +187,8 @@ void print_status(void) {
 	//여기에 아이템 구조체 배열 말고 야간 운동 때 지시할 플레이어 별 아이템 획득 배열 지정한거 사용해도 될듯
 	for (int p = 0; p < n_player; p++) {
 		printf("player %2d: %5s", p, player[p].is_alive ? "alive" : "DEAD");
-		printf("\t%d(%s%d)\t%d(%s%d)\t%3d%%", player[p].intel, player[p].intel >= 0 ? "+" : "", player[p].item.intel_buf,
-			player[p].str, player[p].str >= 0 ? "+" : "", player[p].item.str_buf, player[p].stamina);
+		printf("\t%d(%s%d)\t%d(%s%d)\t%3d%%", player[p].intel, player[p].item.intel_buf >= 0 ? "+" : "", player[p].item.intel_buf,
+			player[p].str, player[p].item.str_buf >= 0 ? "+" : "", player[p].item.str_buf, player[p].stamina);
 		printf("\n");
 	}
 }
