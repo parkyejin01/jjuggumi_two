@@ -49,7 +49,7 @@ void nightgame_init(void)
 
             back_buf[px[i]][py[i]] = '0' + i;//플레이어 시작 위치로 이동
 
-            period[i] = randint(300, 500);
+            period[i] = randint(400, 500);
         }
     }
 
@@ -145,7 +145,7 @@ void the_rest_player(int p)
     }
 
     double shortest2 = INT_MAX;
-    int index2;
+    int index2 = -2;
     //살아있는 플레이어 사이에서 아이템 소유한 플레이어들 중 가장 짧은 거리
     for (int i = 0; i < n_player; i++)
     {
@@ -178,7 +178,15 @@ void the_rest_player(int p)
        
     }
     else {//남아있는 아이템이 없는 경우
-        shortmove(p, px[p] - px[index2], py[p] - py[index2]);
+        if (index2 == -2)//남아있는 아이템도 없고, 아이템을 소유한 플레이어도 없을 경우
+        {
+            nx = px[0];
+            ny = py[0];
+        }
+        else//아이템을 소유한 플레이어가 있을 경우
+        {
+            shortmove(p, px[p] - px[index2], py[p] - py[index2]);
+        }
     }
     if (!placable(nx, ny))//위치할 수 없는 곳이면 움직이지 않도록 설정
     {
@@ -380,15 +388,15 @@ void pick_item(int p)
                 gotoxy(N_ROW + 2, 0);
                 if (pick == 1)
                 {
-                    printf("player %d가 아이템을 교환했습니다!! ='ㅅ'=", p);
+                    printf("player %d이 아이템을 교환했습니다!! ='ㅅ'= (현재: %s)", p, player[p].item.name);
                 }
                 else
                 {
-                    printf("player %d가 아이템을 지나쳤습니다...", p);
+                    printf("player %d이 아이템을 지나쳤습니다...", p);
                 }
                 Sleep(1800);
                 gotoxy(N_ROW + 2, 0);
-                printf("                                                   ");
+                printf("                                                                               ");
 
             }
             else//플레이어가 아이템을 가지고 있지 않은 경우
