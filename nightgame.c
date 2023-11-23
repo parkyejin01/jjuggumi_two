@@ -23,6 +23,7 @@ void player_move_night(int, int, int);
 void the_rest_player(int);
 double get_distance(int, int, int, int);
 void shortmove(int, int, int);
+void pick_item(int);
 
 
 //야간운동 맵 생성
@@ -48,7 +49,7 @@ void nightgame_init(void)
 
             back_buf[px[i]][py[i]] = '0' + i;//플레이어 시작 위치로 이동
 
-            period[i] = randint(100, 300);
+            period[i] = randint(300, 500);
         }
     }
 
@@ -161,12 +162,12 @@ void the_rest_player(int p)
     }
 
     //==>비교해서 가장 짧은 거리에 있는 쪽으로 이동
-    if (index1 != -1) {
-        if (shortest1 < shortest2)
+    if (index1 != -1) {//남아있는 아이템이 있는 경우
+        if (shortest1 < shortest2)//아이템이 더 가까울 때
         {
             shortmove(p, px[p] - itemx[index1], py[p] - itemy[index1]);
         }
-        else if (shortest1 > shortest2)
+        else if (shortest1 > shortest2)//아이템 소유 플레이어가 더 가까울 때
         {
             shortmove(p, px[p] - px[index2], py[p] - py[index2]);
         }
@@ -176,10 +177,10 @@ void the_rest_player(int p)
         }
        
     }
-    else {
+    else {//남아있는 아이템이 없는 경우
         shortmove(p, px[p] - px[index2], py[p] - py[index2]);
     }
-    if (!placable(nx, ny))
+    if (!placable(nx, ny))//위치할 수 없는 곳이면 움직이지 않도록 설정
     {
         return;
     }
@@ -330,7 +331,104 @@ void shortmove(int p, int xx, int yy)
         }
     }
 
+}
 
+//아이템이 인접한 공간에 있을 때 상호작용 코드
+void pick_item(int p)
+{
+    //살아있는 플레이어 중 아이템이 인접한 공간에 있을 때
+    if ((player[p].is_alive == true))
+    {
+        if (back_buf[px[p] - 1][py[p]] == 'I' || back_buf[px[p] + 1][py[p]] == 'I' || back_buf[px[p]][py[p] - 1] == 'I' || back_buf[px[p]][py[p] + 1] == 'I')
+        {
+            if (player[p].hasitem == true)//플레이어가 아이템을 가지고 있을 경우
+            {
+                int pick;
+                if (p == 0)
+                {
+                    gotoxy(4, 32);
+                    printf("아이템을 교환하시겠습니까?(네: 1/아니오: 0) : ");
+                    scanf_s("%d", &pick);
+
+                    gotoxy(4, 32);
+                    printf("                                                ");
+
+                }
+                else
+                {
+                    pick = randint(0, 1);
+                }
+
+                if (pick == 1)//교환
+                {
+                    for (int i = 0; i < count_item; i++)
+                    {
+                        if (back_buf[itemx[i]][itemy[i]] == 'I')
+                        {
+                            if (((itemx[i] == px[p] - 1) && (itemy[i] == py[p])) || ((itemx[i] == px[p] + 1) && (itemy[i] == py[p])) || ((itemx[i] == px[p]) && (itemy[i] == py[p] - 1)) || ((itemx[i] == px[p]) && (itemy[i] == py[p] + 1)))//위에 아이템
+                            {
+                                ITEM tmp_item = player[p].item;
+                                player[p].item = night_items[i];
+                                night_items[i] = tmp_item;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                gotoxy(N_ROW + 2, 0);
+                if (pick == 1)
+                {
+                    printf("player %d가 아이템을 교환했습니다!! ='ㅅ'=", p);
+                }
+                else
+                {
+                    printf("player %d가 아이템을 지나쳤습니다...", p);
+                }
+                Sleep(1800);
+                gotoxy(N_ROW + 2, 0);
+                printf("                                                   ");
+
+            }
+            else//플레이어가 아이템을 가지고 있지 않은 경우
+            {
+                player[p].hasitem = true;//아이템 가지고 있다고 설정
+                for (int i = 0; i < count_item; i++)
+                {
+                    if (back_buf[itemx[i]][itemy[i]] == 'I')
+                    {
+                        if ((itemx[i] == px[p] - 1) && (itemy[i] == py[p]))//위에 아이템
+                        {
+                            player[p].item = night_items[i];
+                            back_buf[itemx[i]][itemy[i]] = ' ';
+                            break;
+                        }
+                        else if ((itemx[i] == px[p] + 1) && (itemy[i] == py[p]))//아래에 아이템
+                        {
+                            player[p].item = night_items[i];
+                            back_buf[itemx[i]][itemy[i]] = ' ';
+                            break;
+                        }
+                        else if ((itemx[i] == px[p]) && (itemy[i] == py[p] - 1))//왼쪽에 아이템
+                        {
+                            player[p].item = night_items[i];
+                            back_buf[itemx[i]][itemy[i]] = ' ';
+                            break;
+                        }
+                        else if ((itemx[i] == px[p]) && (itemy[i] == py[p] + 1))//오른쪽에 아이템
+                        {
+                            player[p].item = night_items[i];
+                            back_buf[itemx[i]][itemy[i]] = ' ';
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
+
+    }
 }
 
 
@@ -342,61 +440,6 @@ void nightgame(void)
 
     while (1)
     {
-        //여기에 인접한 칸에 아이템이 있을 때 상호작용 코드 만들기
-        for (int p = 0; p < n_player; p++)
-        {
-            //살아있는 플레이어 중 아이템이 인접한 공간에 있을 때
-            if ((player[p].is_alive == true))
-            {
-                if (back_buf[px[p] - 1][py[p]] == 'I' || back_buf[px[p] + 1][py[p]] == 'I' || back_buf[px[p]][py[p] - 1] == 'I' || back_buf[px[p]][py[p] + 1] == 'I')
-                {
-                    if (player[p].hasitem == true)//플레이어가 아이템을 가지고 있을 경우
-                    {
-
-                    }
-                    else//플레이어가 아이템을 가지고 있지 않은 경우
-                    {
-                        player[p].hasitem = true;//아이템 가지고 있다고 설정
-                        for (int i = 0; i < count_item; i++)
-                        {
-                            if (back_buf[itemx[i]][itemy[i]] == 'I')
-                            {
-                                if ((itemx[i] == px[p] - 1) && (itemy[i] == py[p]))//위에 아이템
-                                {
-                                    player[p].item = night_items[i];
-                                    back_buf[itemx[i]][itemy[i]] = ' ';
-                                    break;
-                                }
-                                else if ((itemx[i] == px[p] + 1) && (itemy[i] == py[p]))//아래에 아이템
-                                {
-                                    player[p].item = night_items[i];
-                                    back_buf[itemx[i]][itemy[i]] = ' ';
-                                    break;
-                                }
-                                else if ((itemx[i] == px[p]) && (itemy[i] == py[p] - 1))//왼쪽에 아이템
-                                {
-                                    player[p].item = night_items[i];
-                                    back_buf[itemx[i]][itemy[i]] = ' ';
-                                    break;
-                                }
-                                else if ((itemx[i] == px[p]) && (itemy[i] == py[p] + 1))//오른쪽에 아이템
-                                {
-                                    player[p].item = night_items[i];
-                                    back_buf[itemx[i]][itemy[i]] = ' ';
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-                }
-
-            }
-        }
-
-        //여기에 인접한 칸에 플레이어 있을 때 상호작용 코드 만들기
-
-
 
         //키 입력 받기
         key_t key = get_key();
@@ -417,6 +460,7 @@ void nightgame(void)
         {
             if (player[p].is_alive == true)
             {
+                //일정 주기마다 플레이어 행동
                 if (tick % period[p] == 0)
                 {
                     the_rest_player(p);
@@ -425,17 +469,39 @@ void nightgame(void)
         }
 
 
-
-
-
         display();
 
         tick += 10;
         Sleep(10);
 
 
+        //여기에 인접한 칸에 아이템이 있을 때 상호작용 코드 만들기
+        for (int p = 0; p < n_player; p++)
+        {
+            if (p == 0)
+            {
+                pick_item(p);
+            }
+            else
+            {
+                if (tick % period[p] == 10)
+                {
+                    pick_item(p);
+                }
+            }
+        }
 
+        //여기에 인접한 칸에 플레이어 있을 때 상호작용 코드 만들기
+        /*for (int p = 0; p < n_player; p++)
+        {
+            if (player[p].is_alive == true)
+            {
+                for (int m = 0; m < n_player; m++)
+                {
 
+                }
+            }
+        }*/
 
 
     }
