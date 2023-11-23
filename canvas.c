@@ -206,8 +206,8 @@ void print_status_jul(void) {
 		{
 			printf("player %2d: %5s", p, player[p].is_alive ? "alive" : "DEAD");
 		}
-		printf("\t%d(%s%d)\t%d(%s%d)\t%3d%%", player[p].intel, player[p].intel >= 0 ? "+" : "", player[p].item.intel_buf,
-			player[p].str, player[p].str >= 0 ? "+" : "", player[p].item.str_buf, player[p].stamina);
+		printf("\t%d(%s%d)\t%d(%s%d)\t%3d%%", player[p].intel, player[p].item.intel_buf >= 0 ? "+" : "", player[p].item.intel_buf,
+			player[p].str, player[p].item.str_buf >= 0 ? "+" : "", player[p].item.str_buf, player[p].stamina);
 		printf("\n");
 	}
 }

@@ -17,6 +17,7 @@ int itemx[ITEM_MAX] = { 0 }, itemy[ITEM_MAX] = { 0 };
 int nx, ny;
 ITEM night_items[ITEM_MAX] = { 0 };
 
+
 void nightgame_init(void);
 void p0(key_t);
 void player_move_night(int, int, int);
@@ -24,6 +25,7 @@ void the_rest_player(int);
 double get_distance(int, int, int, int);
 void shortmove(int, int, int);
 void pick_item(int);
+void player_meet(int);
 
 
 //야간운동 맵 생성
@@ -440,6 +442,183 @@ void pick_item(int p)
 }
 
 
+//플레이어끼리 만났을 때 상호작용 코드
+void player_meet(int p)
+{
+    for (int i = 0; i < n_player; i++)
+    {
+        if (player[i].is_alive == true && p != i)
+        {
+            if (((px[p] - 1 == px[i]) && (py[p] == py[i])) || ((px[p] + 1 == px[i]) && (py[p] == py[i])) || ((px[p] == px[i]) && (py[p] - 1 == py[i])) || ((px[p] == px[i]) && (py[p] + 1 == py[i])))
+            {
+                int pickpick;
+                int player_do;
+                int player_wait;
+                if (p == 0)
+                {
+                    gotoxy(4, 32);
+                    printf("플레이어 %d를 만났습니다! (강탈 시도: 1/회유 시도: 2/무시: 3) : ", i);
+                    scanf_s("%d", &pickpick);
+
+                    gotoxy(4, 32);
+                    printf("                                                                             ");
+                    player_do = 0;
+                    player_wait = i;
+                }
+                else
+                {
+                    if (player[p].hasitem == true && player[i].hasitem == false)
+                    {
+                        player_do = p;
+                        player_wait = i;
+                    }
+                    else if (player[p].hasitem == false && player[i].hasitem == true)
+                    {
+                        player_do = i;
+                        player_wait = p;
+                    }
+                    else
+                    {
+                        int rnd_do = randint(0, 1);
+
+                        if (rnd_do == 0)
+                        {
+                            player_do = p;
+                            player_wait = i;
+                        }
+                        else
+                        {
+                            player_do = i;
+                            player_wait = p;
+                        }
+                    }
+
+                    pickpick = randint(1, 3);
+                }
+
+                if (player[player_do].stamina + player[player_do].item.stamina_buf > 0)//행동하는 플레이어의 스테미나가 0 보다 클 때
+                {
+                    if (pickpick == 1)//강탈
+                    {
+                        double do_str = (player[player_do].str + player[player_do].item.str_buf) * (player[player_do].stamina + player[player_do].item.stamina_buf) / 100;
+                        double wait_str = (player[player_wait].str + player[player_wait].item.str_buf) * (player[player_wait].stamina + player[player_wait].item.stamina_buf) / 100;
+
+                        if (do_str > wait_str)//유효힘이 더 쎄서 강탈 성공
+                        {
+                            if (player[player_wait].hasitem == true || player[player_do].hasitem == true)
+                            {
+                                ITEM tmp_item2 = player[player_do].item;
+                                player[player_do].item = player[player_wait].item;
+                                player[player_wait].item = tmp_item2;
+                                gotoxy(N_ROW + 2, 0);
+                                printf("player %d이 %d로부터 아이템 강탈에 성공했습니다!", player_do, player_wait);
+
+                            }
+                            else
+                            {
+                                gotoxy(N_ROW + 2, 0);
+                                printf("player %d이 %d에게 강탈할 아이템이 없습니다! ㅠㅅㅠ", player_do, player_wait);
+                            }
+
+                            Sleep(1800);
+                            gotoxy(N_ROW + 2, 0);
+                            printf("                                                                                    ");
+
+                            player[player_do].stamina -= 40;
+
+                        }
+                        else//강탈 실패
+                        {
+                            gotoxy(N_ROW + 2, 0);
+                            printf("player %d이 %d로부터 아이템 강탈에 실패했습니다...", player_do, player_wait);
+
+                            Sleep(1800);
+                            gotoxy(N_ROW + 2, 0);
+                            printf("                                                                                    ");
+
+                            player[player_do].stamina -= 60;
+                        }
+                    }
+                    else if (pickpick == 2)//회유
+                    {
+                        double do_intel = (player[player_do].intel + player[player_do].item.intel_buf) * (player[player_do].stamina + player[player_do].item.stamina_buf) / 100;
+                        double wait_intel = (player[player_wait].intel + player[player_wait].item.intel_buf) * (player[player_wait].stamina + player[player_wait].item.stamina_buf) / 100;
+
+
+                        if (do_intel > wait_intel)//회유 성공
+                        {
+                            if (player[player_wait].hasitem == true || player[player_do].hasitem == true)
+                            {
+                                ITEM tmp_item3 = player[player_do].item;
+                                player[player_do].item = player[player_wait].item;
+                                player[player_wait].item = tmp_item3;
+                                gotoxy(N_ROW + 2, 0);
+                                printf("player %d이 %d로부터 아이템 회유에 성공했습니다!", player_do, player_wait);
+
+                            }
+                            else
+                            {
+                                gotoxy(N_ROW + 2, 0);
+                                printf("player %d이 %d에게 회유를 시도했지만 아이템이 없습니다! ㅠㅅㅠ", player_do, player_wait);
+                            }
+
+                            Sleep(1800);
+                            gotoxy(N_ROW + 2, 0);
+                            printf("                                                                                              ");
+
+                            player[player_do].stamina -= 40;
+                        }
+                        else//회유 실패
+                        {
+                            gotoxy(N_ROW + 2, 0);
+                            printf("player %d이 %d로부터 아이템 회유에 실패했습니다...", player_do, player_wait);
+
+                            Sleep(1800);
+                            gotoxy(N_ROW + 2, 0);
+                            printf("                                                                                    ");
+
+                            player[player_do].stamina -= 60;
+                        }
+                    }
+                    else//무시
+                    {
+                        gotoxy(N_ROW + 2, 0);
+                        printf("플레이어 %d가 %d를 무시했습니다.ㅍ,ㅍ",player_do, player_wait);
+
+                        Sleep(1800);
+                        gotoxy(N_ROW + 2, 0);
+                        printf("                                                                                    ");
+                        
+                    }
+                }
+                else//무시
+                {
+                    pickpick = 3;
+
+                    gotoxy(N_ROW + 2, 0);
+                    printf("플레이어 %d가 %d를 무시했습니다.ㅍ,ㅍ", player_do, player_wait);
+
+                    Sleep(1800);
+                    gotoxy(N_ROW + 2, 0);
+                    printf("                                                                                    ");
+                }
+
+
+                if (player[player_do].stamina < 0)
+                {
+                    player[player_do].stamina = 0;
+                }
+
+
+                return;
+            }
+        }
+    }
+}
+
+
+
+
 void nightgame(void)
 {
     nightgame_init();
@@ -500,17 +679,23 @@ void nightgame(void)
         }
 
         //여기에 인접한 칸에 플레이어 있을 때 상호작용 코드 만들기
-        /*for (int p = 0; p < n_player; p++)
+        for (int p = 0; p < n_player; p++)
         {
             if (player[p].is_alive == true)
             {
-                for (int m = 0; m < n_player; m++)
+                if (p == 0)
                 {
-
+                    player_meet(p);
+                }
+                else
+                {
+                    if (tick % period[p] == 10)
+                    {
+                        player_meet(p);
+                    }
                 }
             }
-        }*/
-
-
+        }
     }
+
 }
