@@ -171,10 +171,10 @@ int main(void) {
 	jjuggumi_init();
 	//intro();
 	//sample();
-	mugunghwa();
-	nightgame();
-	juldarigi();
-	//jebi();
+	//mugunghwa();
+	//nightgame();
+	//juldarigi();
+	jebi();
 	ending();
 	return 0;
 }
