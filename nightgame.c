@@ -26,6 +26,7 @@ double get_distance(int, int, int, int);
 void shortmove(int, int, int);
 void pick_item(int);
 void player_meet(int);
+void stamin_night(void);
 
 
 //야간운동 맵 생성
@@ -616,7 +617,20 @@ void player_meet(int p)
     }
 }
 
-
+void stamin_night(void)//게임 마칠 때마다 일정량 회복
+{
+    for (int p = 0; p < n_player; p++)
+    {
+        if (player[p].is_alive == true)
+        {
+            player[p].stamina += 40;
+            if (player[p].stamina > 100)
+            {
+                player[p].stamina = 100;
+            }
+        }
+    }
+}
 
 
 void nightgame(void)
@@ -632,6 +646,7 @@ void nightgame(void)
         key_t key = get_key();
         if (key == K_QUIT)//Q입력 시 종료
         {
+            stamin_night();
             return;
         }
         else if (key != K_UNDEFINED)//방향키 입력 받았을 시 플레이어 0 코드

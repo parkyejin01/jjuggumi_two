@@ -173,7 +173,7 @@ int main(void) {
 	//sample();
 	mugunghwa();
 	nightgame();
-	//juldarigi();
+	juldarigi();
 	//jebi();
 	ending();
 	return 0;
