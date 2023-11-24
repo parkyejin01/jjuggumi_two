@@ -397,7 +397,7 @@ void pick_item(int p)
                 {
                     printf("player %d이 아이템을 지나쳤습니다...", p);
                 }
-                Sleep(1800);
+                Sleep(1500);
                 gotoxy(N_ROW + 2, 0);
                 printf("                                                                               ");
 
@@ -470,13 +470,13 @@ void player_meet(int p)
                 {
                     if (player[p].hasitem == true && player[i].hasitem == false)
                     {
-                        player_do = p;
-                        player_wait = i;
+                        player_do = i;
+                        player_wait = p;
                     }
                     else if (player[p].hasitem == false && player[i].hasitem == true)
                     {
-                        player_do = i;
-                        player_wait = p;
+                        player_do = p;
+                        player_wait = i;
                     }
                     else
                     {
@@ -521,7 +521,7 @@ void player_meet(int p)
                                 printf("player %d이 %d에게 강탈할 아이템이 없습니다! ㅠㅅㅠ", player_do, player_wait);
                             }
 
-                            Sleep(1800);
+                            Sleep(1500);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
 
@@ -533,7 +533,7 @@ void player_meet(int p)
                             gotoxy(N_ROW + 2, 0);
                             printf("player %d이 %d로부터 아이템 강탈에 실패했습니다...", player_do, player_wait);
 
-                            Sleep(1800);
+                            Sleep(1500);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
 
@@ -563,7 +563,7 @@ void player_meet(int p)
                                 printf("player %d이 %d에게 회유를 시도했지만 아이템이 없습니다! ㅠㅅㅠ", player_do, player_wait);
                             }
 
-                            Sleep(1800);
+                            Sleep(1500);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                              ");
 
@@ -574,7 +574,7 @@ void player_meet(int p)
                             gotoxy(N_ROW + 2, 0);
                             printf("player %d이 %d로부터 아이템 회유에 실패했습니다...", player_do, player_wait);
 
-                            Sleep(1800);
+                            Sleep(1500);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
 
@@ -584,9 +584,9 @@ void player_meet(int p)
                     else//무시
                     {
                         gotoxy(N_ROW + 2, 0);
-                        printf("플레이어 %d가 %d를 무시했습니다.ㅍ,ㅍ",player_do, player_wait);
+                        printf("플레이어 %d가 %d를 무시했습니다...-,-",player_do, player_wait);
 
-                        Sleep(1800);
+                        Sleep(1500);
                         gotoxy(N_ROW + 2, 0);
                         printf("                                                                                    ");
                         
@@ -599,7 +599,7 @@ void player_meet(int p)
                     gotoxy(N_ROW + 2, 0);
                     printf("플레이어 %d가 %d를 무시했습니다.ㅍ,ㅍ", player_do, player_wait);
 
-                    Sleep(1800);
+                    Sleep(1500);
                     gotoxy(N_ROW + 2, 0);
                     printf("                                                                                    ");
                 }
