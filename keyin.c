@@ -10,23 +10,12 @@ bool is_valid(key_t key) {
 		K_DOWN,
 		K_LEFT,
 		K_RIGHT,
-		K_QUIT
-	};
-
-	for (int i = 0; i < N_KEY; i++) {
-		if (key_list[i] == key) {
-			return true;
-		}
-	}
-	return false;
-}
-
-bool juldarigi_is_valid(key_t key) {
-	static key_t key_list[] = {
+		K_QUIT,
 		'z',
 		'/',
 		'x',
-		'.'
+		'.',
+		K_SPACE
 	};
 
 	for (int i = 0; i < N_KEY; i++) {
@@ -36,6 +25,7 @@ bool juldarigi_is_valid(key_t key) {
 	}
 	return false;
 }
+
 
 // 키보드에서 입력 받은 키가 무슨 키인지 구분해서 리턴
 key_t get_key(void) {
@@ -49,25 +39,6 @@ key_t get_key(void) {
 	}
 
 	if (is_valid(key)) {
-		return key;
-	}
-	else {
-		return K_UNDEFINED;
-	}
-}
-
-
-key_t juldarigi_get_key(void) {
-	if (!_kbhit()) {
-		return K_UNDEFINED;
-	}
-
-	int key = _getch();
-	if (key == K_ARROW) {
-		key = _getch();
-	}
-
-	if (juldarigi_is_valid(key)) {
 		return key;
 	}
 	else {

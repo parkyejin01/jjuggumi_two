@@ -416,3 +416,57 @@ void dialog_juldarigi_lie(char message[])
 		}
 	}
 }
+
+
+void dialog_jebi(char p[], char message[])
+{
+	for (int i = 0; i < ROW_MAX; i++) {
+		for (int j = 0; j < COL_MAX; j++) {
+			rmb_buf[i][j] = back_buf[i][j];
+		}
+	}
+
+	for (int i = 1; i < 4; i++) {
+		for (int j = 1; j < 22; j++) {
+			back_buf[i][j] = ' ';
+		}
+	}
+
+	for (int i = 1; i < 4; i++) {
+		back_buf[i][1] = back_buf[i][21] = '*';
+
+		for (int j = 2; j < 21; j++) {
+			back_buf[i][j] = (i == 1 || i == 3) ? '*' : ' ';
+		}
+	}
+
+	for (int i = 1; i < 4; i++) {
+		for (int j = 1; j < 22; j++) {
+			gotoxy(i, j);
+			printf("%c", back_buf[i][j]);
+		}
+	}
+
+
+	for (int i = DIALOG_DURATION_SEC; i > 0; i--)
+	{
+		gotoxy(2, 3);
+		printf("%d player %c %s!", i, p[0], message);
+
+
+		Sleep(1000);
+	}
+
+	for (int i = 0; i < ROW_MAX; i++) {
+		for (int j = 0; j < COL_MAX; j++) {
+			back_buf[i][j] = rmb_buf[i][j];
+		}
+	}
+
+	for (int i = 1; i < 6; i++) {
+		for (int j = 1; j < 22; j++) {
+			gotoxy(i, j);
+			printf("%c", back_buf[i][j]);
+		}
+	}
+}

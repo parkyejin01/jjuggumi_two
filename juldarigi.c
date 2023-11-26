@@ -181,7 +181,7 @@ void juldarigi(void)
 
 	while (1)
 	{
-		key_t key = juldarigi_get_key();
+		key_t key = get_key();
 		if (key == K_QUIT)//Q입력 시 종료
 		{
 			stamin();
