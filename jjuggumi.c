@@ -169,11 +169,11 @@ int jjuggumi_init(void) {
 
 int main(void) {
 	jjuggumi_init();
-	//intro();
+	intro();
 	//sample();
-	//mugunghwa();
-	//nightgame();
-	//juldarigi();
+	mugunghwa();
+	nightgame();
+	juldarigi();
 	jebi();
 	ending();
 	return 0;
