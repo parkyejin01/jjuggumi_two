@@ -121,6 +121,7 @@ void p0(key_t key)
     {
         return;
     }
+    
 
     player_move_night(0, nx, ny);
 }
@@ -506,7 +507,7 @@ void player_meet(int p)
 
                         if (do_str > wait_str)//유효힘이 더 쎄서 강탈 성공
                         {
-                            if (player[player_wait].hasitem == true || player[player_do].hasitem == true)
+                            if (player[player_wait].hasitem == true && player[player_do].hasitem == true)
                             {
                                 ITEM tmp_item2 = player[player_do].item;
                                 player[player_do].item = player[player_wait].item;
@@ -514,6 +515,26 @@ void player_meet(int p)
                                 gotoxy(N_ROW + 2, 0);
                                 printf("player %d이 %d로부터 아이템 강탈에 성공했습니다!", player_do, player_wait);
 
+                            }
+                            else if (player[player_wait].hasitem == true && player[player_do].hasitem == false)
+                            {
+                                ITEM tmp_item2 = player[player_do].item;
+                                player[player_do].item = player[player_wait].item;
+                                player[player_do].hasitem = true;
+                                player[player_wait].hasitem = false;
+                                player[player_wait].item = tmp_item2;
+                                gotoxy(N_ROW + 2, 0);
+                                printf("player %d이 %d로부터 아이템 강탈에 성공했습니다!", player_do, player_wait);
+                            }
+                            else if (player[player_wait].hasitem == false && player[player_do].hasitem == true)
+                            {
+                                ITEM tmp_item2 = player[player_do].item;
+                                player[player_do].item = player[player_wait].item;
+                                player[player_do].hasitem = false;
+                                player[player_wait].hasitem = true;
+                                player[player_wait].item = tmp_item2;
+                                gotoxy(N_ROW + 2, 0);
+                                printf("player %d이 %d로부터 아이템 강탈에 성공했습니다!", player_do, player_wait);
                             }
                             else
                             {
@@ -548,7 +569,7 @@ void player_meet(int p)
 
                         if (do_intel > wait_intel)//회유 성공
                         {
-                            if (player[player_wait].hasitem == true || player[player_do].hasitem == true)
+                            if (player[player_wait].hasitem == true && player[player_do].hasitem == true)
                             {
                                 ITEM tmp_item3 = player[player_do].item;
                                 player[player_do].item = player[player_wait].item;
@@ -556,6 +577,26 @@ void player_meet(int p)
                                 gotoxy(N_ROW + 2, 0);
                                 printf("player %d이 %d로부터 아이템 회유에 성공했습니다!", player_do, player_wait);
 
+                            }
+                            else if (player[player_wait].hasitem == true && player[player_do].hasitem == false)
+                            {
+                                ITEM tmp_item2 = player[player_do].item;
+                                player[player_do].item = player[player_wait].item;
+                                player[player_do].hasitem = true;
+                                player[player_wait].hasitem = false;
+                                player[player_wait].item = tmp_item2;
+                                gotoxy(N_ROW + 2, 0);
+                                printf("player %d이 %d로부터 아이템 회유에 성공했습니다!", player_do, player_wait);
+                            }
+                            else if (player[player_wait].hasitem == false && player[player_do].hasitem == true)
+                            {
+                                ITEM tmp_item2 = player[player_do].item;
+                                player[player_do].item = player[player_wait].item;
+                                player[player_do].hasitem = false;
+                                player[player_wait].hasitem = true;
+                                player[player_wait].item = tmp_item2;
+                                gotoxy(N_ROW + 2, 0);
+                                printf("player %d이 %d로부터 아이템 회유에 성공했습니다!", player_do, player_wait);
                             }
                             else
                             {
@@ -597,7 +638,7 @@ void player_meet(int p)
                     pickpick = 3;
 
                     gotoxy(N_ROW + 2, 0);
-                    printf("플레이어 %d가 %d를 무시했습니다.ㅍ,ㅍ", player_do, player_wait);
+                    printf("스테미나가 0이라 플레이어 %d가 %d를 무시합니다.", player_do, player_wait);
 
                     Sleep(1000);
                     gotoxy(N_ROW + 2, 0);
