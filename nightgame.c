@@ -16,6 +16,7 @@ int item_limit[ITEM_MAX];
 int itemx[ITEM_MAX] = { 0 }, itemy[ITEM_MAX] = { 0 };
 int nx, ny;
 ITEM night_items[ITEM_MAX] = { 0 };
+int move_0flag = 0;
 
 
 void nightgame_init(void);
@@ -122,6 +123,7 @@ void p0(key_t key)
         return;
     }
     
+    move_0flag = 1;
 
     player_move_night(0, nx, ny);
 }
@@ -436,10 +438,8 @@ void pick_item(int p)
                         }
                     }
                 }
-
             }
         }
-
     }
 }
 
@@ -514,7 +514,6 @@ void player_meet(int p)
                                 player[player_wait].item = tmp_item2;
                                 gotoxy(N_ROW + 2, 0);
                                 printf("player %d이 %d로부터 아이템 강탈에 성공했습니다!", player_do, player_wait);
-
                             }
                             else if (player[player_wait].hasitem == true && player[player_do].hasitem == false)
                             {
@@ -541,11 +540,9 @@ void player_meet(int p)
                                 gotoxy(N_ROW + 2, 0);
                                 printf("player %d이 %d에게 강탈할 아이템이 없습니다! ㅠㅅㅠ", player_do, player_wait);
                             }
-
                             Sleep(1000);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
-
                             player[player_do].stamina -= 40;
 
                         }
@@ -553,7 +550,6 @@ void player_meet(int p)
                         {
                             gotoxy(N_ROW + 2, 0);
                             printf("player %d이 %d로부터 아이템 강탈에 실패했습니다...", player_do, player_wait);
-
                             Sleep(1000);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
@@ -626,7 +622,6 @@ void player_meet(int p)
                     {
                         gotoxy(N_ROW + 2, 0);
                         printf("플레이어 %d가 %d를 무시했습니다...-,-",player_do, player_wait);
-
                         Sleep(1000);
                         gotoxy(N_ROW + 2, 0);
                         printf("                                                                                    ");
@@ -639,7 +634,6 @@ void player_meet(int p)
 
                     gotoxy(N_ROW + 2, 0);
                     printf("스테미나가 0이라 플레이어 %d가 %d를 무시합니다.", player_do, player_wait);
-
                     Sleep(1000);
                     gotoxy(N_ROW + 2, 0);
                     printf("                                                                                    ");
@@ -739,9 +733,10 @@ void nightgame(void)
         {
             if (player[p].is_alive == true)
             {
-                if (p == 0)
+                if (p == 0 && move_0flag == 1)
                 {
                     player_meet(p);
+                    move_0flag = 0;
                 }
                 else
                 {
