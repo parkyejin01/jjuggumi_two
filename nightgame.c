@@ -400,7 +400,7 @@ void pick_item(int p)
                 {
                     printf("player %d이 아이템을 지나쳤습니다...", p);
                 }
-                Sleep(1000);
+                Sleep(1500);
                 gotoxy(N_ROW + 2, 0);
                 printf("                                                                               ");
 
@@ -416,27 +416,36 @@ void pick_item(int p)
                         {
                             player[p].item = night_items[i];
                             back_buf[itemx[i]][itemy[i]] = ' ';
+                            player[p].stamina += player[p].item.stamina_buf;
                             break;
                         }
                         else if ((itemx[i] == px[p] + 1) && (itemy[i] == py[p]))//아래에 아이템
                         {
                             player[p].item = night_items[i];
                             back_buf[itemx[i]][itemy[i]] = ' ';
+                            player[p].stamina += player[p].item.stamina_buf;
                             break;
                         }
                         else if ((itemx[i] == px[p]) && (itemy[i] == py[p] - 1))//왼쪽에 아이템
                         {
                             player[p].item = night_items[i];
                             back_buf[itemx[i]][itemy[i]] = ' ';
+                            player[p].stamina += player[p].item.stamina_buf;
                             break;
                         }
                         else if ((itemx[i] == px[p]) && (itemy[i] == py[p] + 1))//오른쪽에 아이템
                         {
                             player[p].item = night_items[i];
                             back_buf[itemx[i]][itemy[i]] = ' ';
+                            player[p].stamina += player[p].item.stamina_buf;
                             break;
                         }
                     }
+                }
+
+                if (player[p].stamina > 100)
+                {
+                    player[p].stamina = 100;
                 }
             }
         }
@@ -473,11 +482,21 @@ void player_meet(int p)
                     {
                         player_do = i;
                         player_wait = p;
+                        if (player_wait == 0)
+                        {
+                            player_do = p;
+                            player_wait = i;
+                        }
                     }
                     else if (player[p].hasitem == false && player[i].hasitem == true)
                     {
                         player_do = p;
                         player_wait = i;
+                        if (player_wait == 0)
+                        {
+                            player_do = i;
+                            player_wait = p;
+                        }
                     }
                     else
                     {
@@ -493,17 +512,24 @@ void player_meet(int p)
                             player_do = i;
                             player_wait = p;
                         }
+
+                        if (player_wait == 0)
+                        {
+                            int tmp = player_do;
+                            player_do = player_wait;
+                            player_wait = tmp;
+                        }
                     }
 
                     pickpick = randint(1, 3);
                 }
 
-                if (player[player_do].stamina + player[player_do].item.stamina_buf > 0)//행동하는 플레이어의 스테미나가 0 보다 클 때
+                if (player[player_do].stamina > 0)//행동하는 플레이어의 스테미나가 0 보다 클 때
                 {
                     if (pickpick == 1)//강탈
                     {
-                        double do_str = (player[player_do].str + player[player_do].item.str_buf) * (player[player_do].stamina + player[player_do].item.stamina_buf) / 100;
-                        double wait_str = (player[player_wait].str + player[player_wait].item.str_buf) * (player[player_wait].stamina + player[player_wait].item.stamina_buf) / 100;
+                        double do_str = (player[player_do].str + player[player_do].item.str_buf) * (player[player_do].stamina) / 100;
+                        double wait_str = (player[player_wait].str + player[player_wait].item.str_buf) * (player[player_wait].stamina) / 100;
 
                         if (do_str > wait_str)//유효힘이 더 쎄서 강탈 성공
                         {
@@ -540,7 +566,7 @@ void player_meet(int p)
                                 gotoxy(N_ROW + 2, 0);
                                 printf("player %d이 %d에게 강탈할 아이템이 없습니다! ㅠㅅㅠ", player_do, player_wait);
                             }
-                            Sleep(1000);
+                            Sleep(1500);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
                             player[player_do].stamina -= 40;
@@ -550,7 +576,7 @@ void player_meet(int p)
                         {
                             gotoxy(N_ROW + 2, 0);
                             printf("player %d이 %d로부터 아이템 강탈에 실패했습니다...", player_do, player_wait);
-                            Sleep(1000);
+                            Sleep(1500);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
 
@@ -559,8 +585,8 @@ void player_meet(int p)
                     }
                     else if (pickpick == 2)//회유
                     {
-                        double do_intel = (player[player_do].intel + player[player_do].item.intel_buf) * (player[player_do].stamina + player[player_do].item.stamina_buf) / 100;
-                        double wait_intel = (player[player_wait].intel + player[player_wait].item.intel_buf) * (player[player_wait].stamina + player[player_wait].item.stamina_buf) / 100;
+                        double do_intel = (player[player_do].intel + player[player_do].item.intel_buf) * (player[player_do].stamina) / 100;
+                        double wait_intel = (player[player_wait].intel + player[player_wait].item.intel_buf) * (player[player_wait].stamina) / 100;
 
 
                         if (do_intel > wait_intel)//회유 성공
@@ -600,7 +626,7 @@ void player_meet(int p)
                                 printf("player %d이 %d에게 회유를 시도했지만 아이템이 없습니다! ㅠㅅㅠ", player_do, player_wait);
                             }
 
-                            Sleep(1000);
+                            Sleep(1500);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                              ");
 
@@ -611,7 +637,7 @@ void player_meet(int p)
                             gotoxy(N_ROW + 2, 0);
                             printf("player %d이 %d로부터 아이템 회유에 실패했습니다...", player_do, player_wait);
 
-                            Sleep(1000);
+                            Sleep(1500);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
 
@@ -622,7 +648,7 @@ void player_meet(int p)
                     {
                         gotoxy(N_ROW + 2, 0);
                         printf("플레이어 %d가 %d를 무시했습니다...-,-",player_do, player_wait);
-                        Sleep(1000);
+                        Sleep(1500);
                         gotoxy(N_ROW + 2, 0);
                         printf("                                                                                    ");
                         
@@ -634,7 +660,7 @@ void player_meet(int p)
 
                     gotoxy(N_ROW + 2, 0);
                     printf("스테미나가 0이라 플레이어 %d가 %d를 무시합니다.", player_do, player_wait);
-                    Sleep(1000);
+                    Sleep(1500);
                     gotoxy(N_ROW + 2, 0);
                     printf("                                                                                    ");
                 }
@@ -718,12 +744,16 @@ void nightgame(void)
             if (p == 0)
             {
                 pick_item(p);
+
+                display();
             }
             else
             {
                 if (tick % period[p] == 10)
                 {
                     pick_item(p);
+
+                    display();
                 }
             }
         }
