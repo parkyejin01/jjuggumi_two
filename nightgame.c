@@ -395,15 +395,20 @@ void pick_item(int p)
                 gotoxy(N_ROW + 2, 0);
                 if (pick == 1)
                 {
-                    printf("player %d이 아이템을 교환했습니다!! ='ㅅ'= (현재: %s)", p, player[p].item.name);
+                    printf("player %d이(가) %s(으)로 item을 교환했습니다!! ='ㅅ'= ", p, player[p].item.name);
                 }
                 else
                 {
-                    printf("player %d이 아이템을 지나쳤습니다...", p);
+                    printf("player %d이(가) item을 지나쳤습니다...", p);
                 }
-                Sleep(1500);
+                Sleep(1200);
                 gotoxy(N_ROW + 2, 0);
                 printf("                                                                               ");
+
+                if (player[p].stamina > 100)
+                {
+                    player[p].stamina = 100;
+                }
 
             }
             else//플레이어가 아이템을 가지고 있지 않은 경우
@@ -448,6 +453,16 @@ void pick_item(int p)
                 {
                     player[p].stamina = 100;
                 }
+
+
+                gotoxy(N_ROW + 2, 0);
+                printf("player %d가 item %s을(를) 주웠습니다!", p, player[p].item.name);
+                Sleep(1200);
+                gotoxy(N_ROW + 2, 0);
+                printf("                                                                  ");
+
+
+
             }
         }
     }
@@ -522,7 +537,19 @@ void player_meet(int p)
                         }
                     }
 
-                    pickpick = randint(1, 3);
+                    if (player_do == 0)
+                    {
+                        gotoxy(4, 32);
+                        printf("플레이어 %d를 만났습니다! (강탈 시도: 1/회유 시도: 2/무시: 3) : ", player_wait);
+                        scanf_s("%d", &pickpick);
+
+                        gotoxy(4, 32);
+                        printf("                                                                             ");
+                    }
+                    else
+                    {
+                        pickpick = randint(1, 3);
+                    }
                 }
 
                 if (player[player_do].stamina > 0)//행동하는 플레이어의 스테미나가 0 보다 클 때
@@ -540,7 +567,7 @@ void player_meet(int p)
                                 player[player_do].item = player[player_wait].item;
                                 player[player_wait].item = tmp_item2;
                                 gotoxy(N_ROW + 2, 0);
-                                printf("player %d이 %d로부터 아이템 강탈에 성공했습니다!", player_do, player_wait);
+                                printf("player %d이(가) %d(으)로부터 item %s을(를) 강탈했습니다!", player_do, player_wait, player[player_do].item.name);
                             }
                             else if (player[player_wait].hasitem == true && player[player_do].hasitem == false)
                             {
@@ -550,26 +577,21 @@ void player_meet(int p)
                                 player[player_wait].hasitem = false;
                                 player[player_wait].item = tmp_item2;
                                 gotoxy(N_ROW + 2, 0);
-                                printf("player %d이 %d로부터 아이템 강탈에 성공했습니다!", player_do, player_wait);
+                                printf("player %d이(가) %d(으)로부터 item %s을(를) 강탈했습니다!", player_do, player_wait, player[player_do].item.name);
                             }
                             else if (player[player_wait].hasitem == false && player[player_do].hasitem == true)
                             {
-                                ITEM tmp_item2 = player[player_do].item;
-                                player[player_do].item = player[player_wait].item;
-                                player[player_do].hasitem = false;
-                                player[player_wait].hasitem = true;
-                                player[player_wait].item = tmp_item2;
                                 gotoxy(N_ROW + 2, 0);
-                                printf("player %d이 %d로부터 아이템 강탈에 성공했습니다!", player_do, player_wait);
+                                printf("player %d이(가) %d(으)로부터 item 강탈에 성공했지만, %d이(가) item이 없습니다!", player_do, player_wait, player_wait);
                             }
                             else
                             {
                                 gotoxy(N_ROW + 2, 0);
-                                printf("player %d이 %d에게 강탈할 아이템이 없습니다! ㅠㅅㅠ", player_do, player_wait);
+                                printf("player %d이(가) %d(으)로부터 item 강탈에 성공했지만, %d이(가) item이 없습니다!", player_do, player_wait, player_wait);
                             }
-                            Sleep(1500);
+                            Sleep(1200);
                             gotoxy(N_ROW + 2, 0);
-                            printf("                                                                                    ");
+                            printf("                                                                                                                ");
                             player[player_do].stamina -= 40;
 
                         }
@@ -577,7 +599,7 @@ void player_meet(int p)
                         {
                             gotoxy(N_ROW + 2, 0);
                             printf("player %d이 %d로부터 아이템 강탈에 실패했습니다...", player_do, player_wait);
-                            Sleep(1500);
+                            Sleep(1200);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
 
@@ -598,7 +620,7 @@ void player_meet(int p)
                                 player[player_do].item = player[player_wait].item;
                                 player[player_wait].item = tmp_item3;
                                 gotoxy(N_ROW + 2, 0);
-                                printf("player %d이 %d로부터 아이템 회유에 성공했습니다!", player_do, player_wait);
+                                printf("player %d이(가) %d을(를) 회유하여 item %s을(를) 얻었습니다!", player_do, player_wait, player[player_do].item.name);
 
                             }
                             else if (player[player_wait].hasitem == true && player[player_do].hasitem == false)
@@ -609,36 +631,31 @@ void player_meet(int p)
                                 player[player_wait].hasitem = false;
                                 player[player_wait].item = tmp_item2;
                                 gotoxy(N_ROW + 2, 0);
-                                printf("player %d이 %d로부터 아이템 회유에 성공했습니다!", player_do, player_wait);
+                                printf("player %d이(가) %d을(를) 회유하여 item %s을(를) 얻었습니다!", player_do, player_wait, player[player_do].item.name);
                             }
                             else if (player[player_wait].hasitem == false && player[player_do].hasitem == true)
                             {
-                                ITEM tmp_item2 = player[player_do].item;
-                                player[player_do].item = player[player_wait].item;
-                                player[player_do].hasitem = false;
-                                player[player_wait].hasitem = true;
-                                player[player_wait].item = tmp_item2;
                                 gotoxy(N_ROW + 2, 0);
-                                printf("player %d이 %d로부터 아이템 회유에 성공했습니다!", player_do, player_wait);
+                                printf("player %d이(가) %d(으)로부터 회유에 성공했지만, %d이(가) item이 없습니다!", player_do, player_wait, player_wait);
                             }
                             else
                             {
                                 gotoxy(N_ROW + 2, 0);
-                                printf("player %d이 %d에게 회유를 시도했지만 아이템이 없습니다! ㅠㅅㅠ", player_do, player_wait);
+                                printf("player %d이(가) %d(으)로부터 회유에 성공했지만, %d이(가) item이 없습니다!", player_do, player_wait, player_wait);
                             }
 
-                            Sleep(1500);
+                            Sleep(1200);
                             gotoxy(N_ROW + 2, 0);
-                            printf("                                                                                              ");
+                            printf("                                                                                                                                      ");
 
                             player[player_do].stamina -= 40;
                         }
                         else//회유 실패
                         {
                             gotoxy(N_ROW + 2, 0);
-                            printf("player %d이 %d로부터 아이템 회유에 실패했습니다...", player_do, player_wait);
+                            printf("player %d이 %d을(를) 회유하는 것에 실패했습니다...", player_do, player_wait);
 
-                            Sleep(1500);
+                            Sleep(1200);
                             gotoxy(N_ROW + 2, 0);
                             printf("                                                                                    ");
 
@@ -649,7 +666,7 @@ void player_meet(int p)
                     {
                         gotoxy(N_ROW + 2, 0);
                         printf("플레이어 %d가 %d를 무시했습니다...-,-",player_do, player_wait);
-                        Sleep(1500);
+                        Sleep(1200);
                         gotoxy(N_ROW + 2, 0);
                         printf("                                                                                    ");
                         
@@ -661,7 +678,7 @@ void player_meet(int p)
 
                     gotoxy(N_ROW + 2, 0);
                     printf("스테미나가 0이라 플레이어 %d가 %d를 무시합니다.", player_do, player_wait);
-                    Sleep(1500);
+                    Sleep(700);
                     gotoxy(N_ROW + 2, 0);
                     printf("                                                                                    ");
                 }
