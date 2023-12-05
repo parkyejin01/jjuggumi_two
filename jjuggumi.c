@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include "jjuggumi.h"
+#include "canvas.h"
 
 #define	DATA_FILE	"jjuggumi.dat"
 
