@@ -383,6 +383,7 @@ void pick_item(int p)
                             {
                                 ITEM tmp_item = player[p].item;
                                 player[p].item = night_items[i];
+                                player[p].stamina += player[p].item.stamina_buf;
                                 night_items[i] = tmp_item;
 
                                 break;

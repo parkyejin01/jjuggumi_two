@@ -172,8 +172,8 @@ int main(void) {
 	//intro();
 	//sample();
 	//mugunghwa();
-	nightgame();
-	//juldarigi();
+	//nightgame();
+	juldarigi();
 	//jebi();
 	ending();
 	return 0;

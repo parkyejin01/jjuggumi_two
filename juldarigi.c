@@ -108,7 +108,7 @@ void juldarigi_init(void)//시작 맵 만들기
 	//플레이어 별 유효 힘 배열 설정
 	for (int p = 0; p < n_player; p++)
 	{
-		str_list[p] = (player[p].str + player[p].item.str_buf) * (player[p].stamina + player[p].item.stamina_buf) / 100;
+		str_list[p] = (player[p].str + player[p].item.str_buf) * (player[p].stamina) / 100;
 	}
 
 }
@@ -141,14 +141,20 @@ void lie_stamin(void)
 				if (left_lie == 1 && p % 2 == 0 && use_lie_l == 0)
 				{
 					player[p].stamina -= 30;
+					if (player[p].stamina < 0)
+					{
+						player[p].stamina = 0;
+					}
+					str_list[p] = (player[p].str + player[p].item.str_buf) * (player[p].stamina) / 100;
 				}
 				else if (right_lie == 1 && p % 2 == 1 && use_lie_r == 0)
 				{
 					player[p].stamina -= 30;
-				}
-				if (player[p].stamina < 0)
-				{
-					player[p].stamina = 0;
+					if (player[p].stamina < 0)
+					{
+						player[p].stamina = 0;
+					}
+					str_list[p] = (player[p].str + player[p].item.str_buf) * (player[p].stamina) / 100;
 				}
 			}
 		}
@@ -207,6 +213,8 @@ void juldarigi(void)
 
 			//눕기 사용시 다이얼로그, 스테미나 감소
 			lie_stamin();
+
+			
 
 			double left_str = 0;
 			double right_str = 0;
