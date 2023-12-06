@@ -15,6 +15,7 @@ int right_lie = 0;
 int right_flag = 0;
 int use_lie_l = 0;
 int use_lie_r = 0;
+int plus_str = 0;
 
 ITEM none = { 0 };
 
@@ -22,7 +23,6 @@ int die;
 double str_list[PLAYER_MAX];//플레이어 별 유효 힘 배열
 int juldarigi_fail[PLAYER_MAX];//줄다리기 탈락 플레이어 확인 배열
 char jul_fail_p[3] = { ' ', ',', ' ' };//다이얼로그로 매 판 줄다리기 탈락 플레이어를 전달할 배열
-
 void juldarigi(void);
 void juldarigi_init(void);
 void stamin(void);
@@ -145,6 +145,7 @@ void lie_stamin(void)
 					{
 						player[p].stamina = 0;
 					}
+
 					str_list[p] = (player[p].str + player[p].item.str_buf) * (player[p].stamina) / 100;
 				}
 				else if (right_lie == 1 && p % 2 == 1 && use_lie_r == 0)
@@ -154,23 +155,10 @@ void lie_stamin(void)
 					{
 						player[p].stamina = 0;
 					}
+					
 					str_list[p] = (player[p].str + player[p].item.str_buf) * (player[p].stamina) / 100;
 				}
 			}
-		}
-		if (left_lie == 1 && use_lie_l == 0)
-		{
-			//다이얼로그 출력
-			char arrleft[] = "left";
-			dialog_juldarigi_lie(arrleft);
-			use_lie_l = 1;
-		}
-		if (right_lie == 1 && use_lie_r == 0)
-		{
-			//다이얼로그 출력
-			char arrright[] = "right";
-			dialog_juldarigi_lie(arrright);
-			use_lie_r = 1;
 		}
 	}
 }
@@ -178,12 +166,12 @@ void lie_stamin(void)
 
 void juldarigi(void)
 {
-	juldarigi_init();
 	system("cls");
+	juldarigi_init();
 	display_jul();
 	jul = 0;//줄 가운데정렬 기준 위치
 	int tick = 0;
-	int plus_str = 0;
+	plus_str = 0;
 
 	while (1)
 	{
@@ -211,10 +199,23 @@ void juldarigi(void)
 				}
 			}
 
-			//눕기 사용시 다이얼로그, 스테미나 감소
-			lie_stamin();
+			if (left_lie == 1 && use_lie_l == 0)
+			{
+				//다이얼로그 출력
+				char arrleft[] = "left";
+				dialog_juldarigi_lie(arrleft);
+				use_lie_l = 1;
+			}
+			if (right_lie == 1 && use_lie_r == 0)
+			{
+				//다이얼로그 출력
+				char arrright[] = "right";
+				dialog_juldarigi_lie(arrright);
+				use_lie_r = 1;
+			}
 
 			
+
 
 			double left_str = 0;
 			double right_str = 0;
@@ -375,6 +376,7 @@ void juldarigi(void)
 		//2초
 		if (tick == 2000)
 		{
+			lie_stamin();
 			left_lie = 0;
 			right_lie = 0;
 			left_flag = 0;
